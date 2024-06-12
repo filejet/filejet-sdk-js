@@ -81,7 +81,7 @@ export function filejetImg(props: FilejetImgProps): HtmlImgProps {
     );
 
     if (['https://', './', '../', '/', '//'].some(prefix => props.src.startsWith(prefix))) {
-      const url = new URL(props.src, document.baseURI);
+      const url = new URL(props.src, globalThis.document?.baseURI);
       const externalId = `@ext_${base64UrlEncode(url.href)}`;
       return `https://${props.filejetDomain}/${externalId}/${mutation}`;
     }

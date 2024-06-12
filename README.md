@@ -26,7 +26,7 @@ const attributes = filejetImg({
   dpiScale: [1, 1.5, 2],
   fit: 'cover',
   backgroundColor: 'transparent',
-  filejetDomain: 'https://cdn.myapp.com',
+  filejetDomain: 'cdn.myapp.com',
 });
 
 // {
