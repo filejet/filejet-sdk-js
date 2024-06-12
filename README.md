@@ -42,7 +42,7 @@ console.log(attributes);
 ## React
 
 To use the Filejet integration, you need to initialize the Filejet and
-provide it trough the `<FilejetProvider />`.
+provide it through the `<FilejetProvider />`.
 
 ```tsx
 import { Filejet, FilejetProvider, LruCache } from '@filejet/sdk/react';
