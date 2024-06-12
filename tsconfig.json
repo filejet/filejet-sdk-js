@@ -1,0 +1,27 @@
+{
+  "extends": "@deftomat/opinionated/configs/tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "jsx": "react",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "noEmit": true,
+    "target": "ES2022",
+    "stripInternal": true,
+    "downlevelIteration": true,
+    "types": ["node"]
+  },
+  "exclude": [
+    "**/node_modules/",
+    "**/build/",
+    "**/dist/",
+    "**/bin/",
+    "**/coverage/",
+    "**/.serverless/",
+    "**/storybook-static/",
+    "**/cdk.out/"
+  ]
+}

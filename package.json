@@ -1,0 +1,53 @@
+{
+  "name": "@filejet/sdk",
+  "version": "0.1.0",
+  "description": "Filejet SDK.",
+  "license": "MIT",
+  "homepage": "https://github.com/filejet/filejet-sdk-js",
+  "exports": {
+    "react": {
+      "types": "./dist/esm/react.d.ts",
+      "import": "./dist/esm/react.js",
+      "require": "./dist/cjs/react.js"
+    },
+    "utils": {
+      "types": "./dist/esm/utils.d.ts",
+      "import": "./dist/esm/utils.js",
+      "require": "./dist/cjs/utils.js"
+    }
+  },
+  "scripts": {
+    "checkup": "opinionated checkup",
+    "build": "tsc-build --include utils.ts,react.ts",
+    "postpublish": "rm -rf ./dist",
+    "prepublishOnly": "yarn build",
+    "watch": "tsc-watch --include utils.ts,react.ts",
+    "prepare": "husky"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "filejet",
+    "react",
+    "sdk"
+  ],
+  "contributors": [
+    "Tomas Szabo <tomas.szabo@deftomat.com>"
+  ],
+  "dependencies": {
+    "thumbhash": "^0.1.1",
+    "quick-lru": "^7.0.0"
+  },
+  "devDependencies": {
+    "@everlutionsk/typescript-build": "^2.2.0",
+    "@deftomat/opinionated": "^1.0.1",
+    "@types/react": "^18.3.3",
+    "@types/node": "^20.14.2",
+    "husky": "^9.0.11",
+    "prettier": "3.2.*",
+    "typescript": "^5.4.5"
+  },
+  "sideEffects": false,
+  "prettier": "@deftomat/opinionated/configs/prettier.config.mjs"
+}

@@ -1,0 +1,17 @@
+.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.serverless
+node_modules
+coverage
+build
+yarn-error.log
+dist
+.DS_Store
+__diff_output__
+.history
+tsconfig.build.json
+tsconfig.tsbuildinfo
+cdk.out
