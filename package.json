@@ -1,16 +1,16 @@
 {
   "name": "@filejet/sdk",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Filejet SDK.",
   "license": "MIT",
   "homepage": "https://github.com/filejet/filejet-sdk-js",
   "exports": {
-    "react": {
+    "./react": {
       "types": "./dist/esm/react.d.ts",
       "import": "./dist/esm/react.js",
       "require": "./dist/cjs/react.js"
     },
-    "utils": {
+    "./utils": {
       "types": "./dist/esm/utils.d.ts",
       "import": "./dist/esm/utils.js",
       "require": "./dist/cjs/utils.js"

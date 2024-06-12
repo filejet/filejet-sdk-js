@@ -45,7 +45,7 @@ export interface FilejetImgProps {
    *
    * Image is ALWAYS auto-resized to the specified width and height by default.
    */
-  readonly mutation: string | undefined;
+  readonly mutation?: string;
 
   /**
    * Filejet domain.
