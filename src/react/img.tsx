@@ -101,7 +101,8 @@ export const Img = memo((props: ImgProps) => {
       fit: props.fit,
       backgroundColor: 'transparent',
       mutation: props.mutation,
-      filejetDomain: config.domain
+      filejetDomain: config.domain,
+      otherFilejetDomains: config.otherFilejetDomains
     });
   }, [props.src, width, height, props.fit, props.mutation]);
 

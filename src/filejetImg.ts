@@ -50,9 +50,23 @@ export interface FilejetImgProps {
   /**
    * Filejet domain.
    *
+   * This domain will be used for all images.
+   *
    * @example 'cdn.filejet.io'
    */
   readonly filejetDomain: string;
+
+  /**
+   * @experimental Use with caution! It is recommended to use default `filejetDomain` for all files.
+   *
+   * List of other Filejet domains.
+   *
+   * If the URL with any of these domains is passed into `src` prop,
+   * it will not be prefixed with the `filejetDomain` and it will be mutated directly.
+   *
+   * @example ['other.filejet.io']
+   */
+  readonly otherFilejetDomains?: string[];
 }
 
 export interface HtmlImgProps {
@@ -82,6 +96,15 @@ export function filejetImg(props: FilejetImgProps): HtmlImgProps {
 
     if (['https://', './', '../', '/', '//'].some(prefix => props.src.startsWith(prefix))) {
       const url = new URL(props.src, globalThis.document?.baseURI);
+
+      if (props.otherFilejetDomains?.some(domain => url.hostname === domain)) {
+        if (url.href.endsWith('/')) {
+          return `${url.href}${mutation}`;
+        } else {
+          return `${url.href}/${mutation}`;
+        }
+      }
+
       const externalId = `@ext_${base64UrlEncode(url.href)}`;
       return `https://${props.filejetDomain}/${externalId}/${mutation}`;
     }

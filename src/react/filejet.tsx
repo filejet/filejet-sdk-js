@@ -10,6 +10,18 @@ export interface FilejetProps {
   readonly domain: string;
 
   /**
+   * @experimental Use with caution! It is recommended to use default `filejetDomain` for all files.
+   *
+   * List of other Filejet domains.
+   *
+   * If the URL with any of these domains is found,
+   * it will not be prefixed with the `filejetDomain` and it will be mutated directly.
+   *
+   * @example ['other.filejet.io']
+   */
+  readonly otherFilejetDomains?: string[];
+
+  /**
    * Img component configuration.
    */
   readonly Img: {

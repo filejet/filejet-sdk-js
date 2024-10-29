@@ -1,6 +1,6 @@
 {
   "name": "@filejet/sdk",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Filejet SDK.",
   "license": "MIT",
   "homepage": "https://github.com/filejet/filejet-sdk-js",

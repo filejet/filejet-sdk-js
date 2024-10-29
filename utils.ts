@@ -1,1 +1,1 @@
-export { FilejetImgProps, HtmlImgProps, ImgObjectFit, filejetImg } from './src/filejetImg';
+export { filejetImg, FilejetImgProps, HtmlImgProps, ImgObjectFit } from './src/filejetImg';
