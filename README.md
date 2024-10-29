@@ -20,7 +20,7 @@ It will return urls with the correct mutations to fit your requirements.
 import { filejetImg } from '@filejet/sdk/utils';
 
 const attributes = filejetImg({
-  src: 'https://myapp.com/image.jpg',
+  src: 'https://myapp.com/image.jpg', // Either URL or file ID.
   width: 128,
   height: 128,
   dpiScale: [1, 1.5, 2],
@@ -42,7 +42,7 @@ console.log(attributes);
 ## React
 
 To use the Filejet integration, you need to initialize the Filejet and
-provide it trough the `<FilejetProvider />`.
+provide it through the `<FilejetProvider />`.
 
 ```tsx
 import { Filejet, FilejetProvider, LruCache } from '@filejet/sdk/react';
