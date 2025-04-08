@@ -169,40 +169,41 @@ export const Img = memo((props: ImgProps) => {
   useEffect(() => {
     if (imgRef.current == null || width == null || height == null) return;
 
-    const observer = new ResizeObserver(entries => {
-      for (let entry of entries) {
-        const { inlineSize: newWidth } = entry.contentBoxSize[0];
-        const { blockSize: newHeight } = entry.contentBoxSize[0];
+    const observer =
+      isPercentage.width || isPercentage.height
+        ? new ResizeObserver(entries => {
+            for (let entry of entries) {
+              const { inlineSize: newWidth } = entry.contentBoxSize[0];
+              const { blockSize: newHeight } = entry.contentBoxSize[0];
 
-        if (
-          isPercentage.width &&
-          isPercentage.height &&
-          (newWidth > 1.5 * width || newWidth < 0.75 * width)
-        ) {
-          setWrapperSizes({ width: newWidth, height: newHeight });
-        }
-        if (
-          isPercentage.width &&
-          !isPercentage.height &&
-          (newWidth > 1.5 * width || newWidth < 0.75 * width)
-        ) {
-          setWrapperSizes({ ...wrapperSizes, width: newWidth });
-        }
-        if (
-          !isPercentage.width &&
-          isPercentage.height &&
-          (newHeight > 1.5 * height || newHeight < 0.75 * height)
-        ) {
-          setWrapperSizes({ ...wrapperSizes, height: newHeight });
-        }
-      }
-    });
+              if (
+                isPercentage.width &&
+                isPercentage.height &&
+                (newWidth > 1.5 * width || newWidth < 0.75 * width)
+              ) {
+                setWrapperSizes({ width: newWidth, height: newHeight });
+              }
+              if (
+                isPercentage.width &&
+                !isPercentage.height &&
+                (newWidth > 1.5 * width || newWidth < 0.75 * width)
+              ) {
+                setWrapperSizes({ ...wrapperSizes, width: newWidth });
+              }
+              if (
+                !isPercentage.width &&
+                isPercentage.height &&
+                (newHeight > 1.5 * height || newHeight < 0.75 * height)
+              ) {
+                setWrapperSizes({ ...wrapperSizes, height: newHeight });
+              }
+            }
+          })
+        : undefined;
 
-    if (isPercentage.width || isPercentage.height) {
-      observer.observe(imgRef.current);
-    }
+    observer?.observe(imgRef.current);
 
-    return () => observer.disconnect();
+    return () => observer?.disconnect();
   }, [width, height]);
 
   return (
