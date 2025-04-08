@@ -1,6 +1,15 @@
-import React, { HTMLAttributes, memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  HTMLAttributes,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { thumbHashToApproximateAspectRatio } from 'thumbhash';
 import { ImgObjectFit, filejetImg } from '../filejetImg';
+import { Percentage } from '../helpers';
 import { useFilejet } from './provider';
 import { ThumbhashImg, useParsedThumbhash } from './thumbhash';
 
@@ -15,12 +24,12 @@ export interface ImgProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * The width of the image to render.
    */
-  readonly width?: number;
+  readonly width?: number | Percentage;
 
   /**
    * The height of the image to render.
    */
-  readonly height?: number;
+  readonly height?: number | Percentage;
 
   /**
    * Specifies how to resize the image to fit the specified width/height.
@@ -73,24 +82,38 @@ export const Img = memo((props: ImgProps) => {
   const [loadingState, setLoadingState] = useState<'loading' | 'loaded' | 'error'>('loading');
   const loadingFailed = useRef(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [wrapperSizes, setWrapperSizes] = useState<{ width?: number; height?: number }>({
+    width: undefined,
+    height: undefined
+  });
+  const isPercentage = {
+    width: typeof props.width === 'string' && props.width.endsWith('%'),
+    height: typeof props.height === 'string' && props.height.endsWith('%')
+  };
 
   const { width, height } = useMemo(() => {
-    if (props.width != null && props.height != null) {
-      return { width: props.width, height: props.height };
+    const numericWidth =
+      typeof props.width === 'number' && !isPercentage.width ? props.width : wrapperSizes.width;
+    const numericHeight =
+      typeof props.height === 'number' && !isPercentage.height ? props.height : wrapperSizes.height;
+
+    if (numericWidth != null && numericHeight != null) {
+      return { width: numericWidth, height: numericHeight };
     }
 
-    if (props.width != null && thumbhash != null) {
+    if (numericWidth != null && thumbhash != null) {
       const ratio = thumbHashToApproximateAspectRatio(thumbhash.data);
-      return { width: props.width, height: Math.round(props.width / ratio) };
+      return { width: numericWidth, height: Math.round(numericWidth / ratio) };
     }
 
-    if (props.height != null && thumbhash != null) {
+    if (numericHeight != null && thumbhash != null) {
       const ratio = thumbHashToApproximateAspectRatio(thumbhash.data);
-      return { width: Math.round(props.height * ratio), height: props.height };
+      return { width: Math.round(numericHeight * ratio), height: numericHeight };
     }
 
-    return { width: props.width, height: props.height };
-  }, [props.width, props.height, thumbhash]);
+    return { width: numericWidth, height: numericHeight };
+  }, [props.width, props.height, thumbhash, wrapperSizes.width, wrapperSizes.height]);
 
   const { src, srcSet } = useMemo(() => {
     return filejetImg({
@@ -124,11 +147,76 @@ export const Img = memo((props: ImgProps) => {
     return imgRef.current == null || !imgRef.current.complete || loadingFailed.current;
   }, []);
 
+  useEffect(() => {
+    if (wrapperRef.current == null) return;
+
+    if (isPercentage.width && isPercentage.height) {
+      setWrapperSizes({
+        width: wrapperRef.current.clientWidth,
+        height: wrapperRef.current.clientHeight
+      });
+    }
+
+    if (isPercentage.width && !isPercentage.height) {
+      setWrapperSizes({ ...wrapperSizes, width: wrapperRef.current.clientWidth });
+    }
+
+    if (!isPercentage.width && isPercentage.height) {
+      setWrapperSizes({ ...wrapperSizes, height: wrapperRef.current.clientHeight });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (imgRef.current == null || width == null || height == null) return;
+
+    const observer =
+      isPercentage.width || isPercentage.height
+        ? new ResizeObserver(entries => {
+            for (let entry of entries) {
+              const { inlineSize: newWidth } = entry.contentBoxSize[0];
+              const { blockSize: newHeight } = entry.contentBoxSize[0];
+
+              if (
+                isPercentage.width &&
+                isPercentage.height &&
+                (newWidth > 1.5 * width || newWidth < 0.75 * width)
+              ) {
+                setWrapperSizes({ width: newWidth, height: newHeight });
+              }
+              if (
+                isPercentage.width &&
+                !isPercentage.height &&
+                (newWidth > 1.5 * width || newWidth < 0.75 * width)
+              ) {
+                setWrapperSizes({ ...wrapperSizes, width: newWidth });
+              }
+              if (
+                !isPercentage.width &&
+                isPercentage.height &&
+                (newHeight > 1.5 * height || newHeight < 0.75 * height)
+              ) {
+                setWrapperSizes({ ...wrapperSizes, height: newHeight });
+              }
+            }
+          })
+        : undefined;
+
+    observer?.observe(imgRef.current);
+
+    return () => observer?.disconnect();
+  }, [width, height]);
+
   return (
     <div
       aria-label={props.alt}
       {...htmlProps}
-      style={{ ...htmlProps.style, position: 'relative', width, height }}
+      style={{
+        ...htmlProps.style,
+        position: 'relative',
+        width: isPercentage.width ? props.width : width,
+        height: isPercentage.height ? props.height : height
+      }}
+      ref={wrapperRef}
     >
       {loadingState !== 'error' && (
         // <img /> needs to be rendered first to ensure thumbhash is
@@ -151,8 +239,8 @@ export const Img = memo((props: ImgProps) => {
           }}
           style={{
             position: 'absolute',
-            width,
-            height,
+            width: isPercentage.width ? '100%' : width,
+            height: isPercentage.height ? '100%' : height,
             objectFit: props.fit,
             textIndent: '-10000px', // Hide loading errors.
             zIndex: 1 // Ensure image is on top of any other nodes.
@@ -166,8 +254,8 @@ export const Img = memo((props: ImgProps) => {
         <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
           <ThumbhashImg
             thumbhash={thumbhash}
-            width={width}
-            height={height}
+            width={isPercentage.width ? '100%' : width}
+            height={isPercentage.height ? '100%' : height}
             fit={props.fit}
             priority={props.priority ?? 'auto'}
             shouldRender={shouldRenderThumbhash}

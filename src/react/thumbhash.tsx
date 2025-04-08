@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { thumbHashToAverageRGBA, thumbHashToDataURL } from 'thumbhash';
 import type { ImgObjectFit } from '../filejetImg';
-import { base64UrlDecode } from '../helpers';
+import { base64UrlDecode, Percentage } from '../helpers';
 import type { ImgPriority } from './img';
 import { useFilejet } from './provider';
 
@@ -27,8 +27,8 @@ export function useParsedThumbhash(thumbhash: string | undefined): ParsedThumbha
 
 export interface ThumbhashImgProps {
   readonly thumbhash: ParsedThumbhash;
-  readonly width: number | undefined;
-  readonly height: number | undefined;
+  readonly width: number | Percentage | undefined;
+  readonly height: number | Percentage | undefined;
   readonly fit: ImgObjectFit;
   readonly priority: ImgPriority;
 

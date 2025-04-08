@@ -35,3 +35,5 @@ export function base64UrlEncode(value: string): string {
 export function base64UrlDecode(value: string): string {
   return atob(value.replace(/-/g, '+').replace(/_/g, '/'));
 }
+
+export type Percentage = `${string}%`;
