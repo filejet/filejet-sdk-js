@@ -227,7 +227,7 @@ export const Img = memo((props: ImgProps) => {
           loading={props.priority === 'high' ? 'eager' : 'lazy'}
           // We can decode the image in the next frame when thumbhash is provided.
           decoding={props.priority === 'high' ? 'sync' : thumbhash != null ? 'async' : 'auto'}
-          fetchpriority={props.priority}
+          fetchPriority={props.priority}
           onLoad={async elm => {
             // Hide placeholders after the image is decoded.
             await elm.currentTarget.decode();
@@ -280,6 +280,6 @@ export const Img = memo((props: ImgProps) => {
 
 declare module 'react' {
   interface HTMLAttributes<T> {
-    fetchpriority?: 'high' | 'low' | 'auto';
+    fetchPriority?: 'high' | 'low' | 'auto';
   }
 }
