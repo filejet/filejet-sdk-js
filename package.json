@@ -1,6 +1,6 @@
 {
   "name": "@filejet/sdk",
-  "version": "0.1.6",
+  "version": "1.0.0",
   "description": "Filejet SDK.",
   "license": "MIT",
   "homepage": "https://github.com/filejet/filejet-sdk-js",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@everlutionsk/typescript-build": "^2.2.0",
     "@deftomat/opinionated": "^1.0.1",
-    "@types/react": "^18.3.3",
+    "@types/react": "^19.2.0",
     "@types/node": "^20.14.2",
     "husky": "^9.0.11",
     "prettier": "3.2.*",

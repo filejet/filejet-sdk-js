@@ -52,7 +52,7 @@ export const ThumbhashImg = memo((props: ThumbhashImgProps) => {
 
   const decodingRequested = useRef(false);
 
-  const intersectionObserver = useRef<IntersectionObserver | undefined>();
+  const intersectionObserver = useRef<IntersectionObserver | undefined>(undefined);
   useEffect(() => {
     return () => intersectionObserver.current?.disconnect();
   }, []);
